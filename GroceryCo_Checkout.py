@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	tax = get_tax_amount(total_price)
 
 	final_price = total_price + tax
-	print("\n{0:<5} {1:<13} {2:<10} {3:<10}".format("COUNT", "ITEM", "PRICE", "PROMOTIONS"))
+	print("\n{0:<5} {1:<13} {2:<10}{3:<10}".format("COUNT", "ITEM", "PRICE", "PROMOTIONS"))
 
 	# Print the receipt for the cart
 	for item, details in cart_prices.items():
@@ -123,14 +123,11 @@ if __name__ == "__main__":
 		
 		if promotions_applied:
 			promotion = details["Promotion"]
-			# print("%d * $%s: %s \n    Promotions: %d * %s" % (count, item, price, promotions_applied, promotion) )
-
-			print("{0:<5} {1:<13} ${2:<10}{3:<1} * {4:<10}".format(count, item, price, promotions_applied, promotion))
+			print("{0:<5} {1:<13} ${2:>6} {3:>4} * {4:>1}".format(count, item, price, promotions_applied, promotion))
 		else:
-			# print("%d * %s: %s" % (count, item, price) )
-			print("{0:<5} {1:<13} ${2:<10}".format(count, item, price))
+			print("{0:<5} {1:<13} ${2:>6}".format(count, item, price))
 
-	print("\nCart Total: $%s" % (format_currency_CAD(total_price)))
-	print("Tax: $%s" % (format_currency_CAD(tax)))
+	print("\nCart Total: {0:>1}".format(format_currency_CAD(total_price)))
+	print("Tax: {0:>12}".format(format_currency_CAD(tax)))
 	print("\n#### TOTAL ####")
-	print("$%s\n" % format_currency_CAD(final_price))
+	print("Total: {0:>11}".format(format_currency_CAD(final_price)))

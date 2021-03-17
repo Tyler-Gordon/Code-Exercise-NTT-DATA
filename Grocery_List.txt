@@ -7,3 +7,5 @@ Meat
 Meat
 Apple
 Orange
+Orange
+Avocado

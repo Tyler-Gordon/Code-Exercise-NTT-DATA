@@ -12,7 +12,7 @@
     "Orange": {
         "Promotion": "BULK",
         "Count": 3,
-        "Price": 2.00
+        "Price": 20.00
     },
 	"Onion": {
         "Promotion": "SALE",
@@ -22,6 +22,6 @@
     "Meat": {
         "Promotion": "BOGO_FREE",
         "Count": 2,
-        "Price": 12.00
+        "Price": 120.00
     }
 }
