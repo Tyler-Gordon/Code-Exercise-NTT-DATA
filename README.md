@@ -9,12 +9,6 @@ Requirements:
 1. Clone or download this repository
 2. Use your terminal to navigate to the directory where it has downloaded
 3. Use the command: `python groceryco_checkout.py` to run the checkout system
- 
-### How to run the tests:
-1. Clone or download this repository
-2. Use your terminal to navigate to the directory where it has downloaded
-3. Use the command: `python test_groceryco_checkout.py` to run the checkout system
-4. The output shows how many test cases passed and failed.
 
 ### Adding/Modifying the user grocery list
 The user grocery list is a plant text file that uses a newline as a delimiter for each item. If an item in the cart is not registered in the `Prices.json` file (which are all available items) the program will return with "Invalid Cart Item"
@@ -58,7 +52,17 @@ For example:
 }
 ```
 
-### Errors/Troubleshooting
+## Testing
+### How to run the tests:
+1. Clone or download this repository
+2. Use your terminal to navigate to the directory where it has downloaded
+3. Use the command: `python test_groceryco_checkout.py` to run the checkout system
+4. The output shows how many test cases passed and failed.
+
+### Modifying tests cases and values
+The tests are located in the `test_groceryco_checkout.py` file, and the associated input files (grocery list, prices, and promotions) are located under the `testing/` folder. These are used by the test cases as mock data. Modifying the mock data will likely cause tests to fail because of hardcoded expected results.
+
+## Errors/Troubleshooting
 - Invalid Cart Item
 	- This means an item in your grocery list is not a registered item in the `Prices.json` file.
 - ``python is not recognized as an internal or external command,
