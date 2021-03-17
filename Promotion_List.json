@@ -1,0 +1,27 @@
+{
+    "Apple": {
+        "Promotion": "BOGO_FREE",
+		"Count": 2,
+		"Price": 0.75
+    },
+    "Red Pepper": {
+        "Promotion": "BOGO_HALF",
+		"Count": 2,
+		"Price": 1.48
+    },
+    "Orange": {
+        "Promotion": "BULK",
+        "Count": 3,
+        "Price": 2.00
+    },
+	"Onion": {
+        "Promotion": "SALE",
+        "Count": 1,
+        "Price": 0.50
+    },
+    "Meat": {
+        "Promotion": "BOGO_FREE",
+        "Count": 2,
+        "Price": 12.00
+    }
+}

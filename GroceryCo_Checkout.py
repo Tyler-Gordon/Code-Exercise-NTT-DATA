@@ -1,19 +1,38 @@
 from collections import Counter
+import json
 
-PRICES = {
-	"Apple" : 0.75,
-	"Orange": 1.00,
-	"Red Pepper" : 0.99
-}
+PRICE_LIST_FILENAME = "Prices.json"
+GROCERY_LIST_FILENAME = 'Grocery_List.txt'
+PROMOTION_LIST_FILENAME = 'Promotion_List.json'
+TAX_PERCENTAGE = 12
 
-PROMOTIONS = ["Apple"]
+def get_grocery_list():
+	# Get the user's grocery list
+	with open(GROCERY_LIST_FILENAME, "r") as file:
+		return file.read().splitlines()
 
-USER_CART = ['Apple', 'Orange', 'Apple', 'Red Pepper']
+def get_promotions():
+	# Get all the promotions available
+	with open(PROMOTION_LIST_FILENAME, "r") as file:
+		data = json.load(file)
+		return data
 
-def format_currency(price):
-	return "${:,.2f}".format(price)
+def get_prices():
+	# Get all the prices available
+	with open(PRICE_LIST_FILENAME, "r") as file:
+		data = json.load(file)
+		return data
+
+def cart_items_valid(cart, prices):
+	# Check if the cart is a subset of all available priced items
+	return set(cart).issubset(prices.keys())
+
+def format_currency_CAD(price):
+	# Format the price to Canadian dollar formatting
+	return "{:,.2f}".format(price)
 
 def count_items_in_cart(cart):
+	# Count items in the cart
 	user_cart_dictionary = {}
 	for item in cart:
 		if item not in user_cart_dictionary:
@@ -21,44 +40,97 @@ def count_items_in_cart(cart):
 		user_cart_dictionary[item] += 1
 	return user_cart_dictionary
 
-def calculate_prices(cart):
+def calculate_prices(cart, promotions, prices):
+	# Create a new dict to keep track of items and prices
 	cart_with_prices = {}
 
 	for item, count in cart.items():
-		price = 0
-		cart_with_prices[item] = {}
-		cart_with_prices[item]['Details'] = {}
-		if item in PROMOTIONS:
-			price, promotion = calculate_promotion_price(item, count)
-			cart_with_prices[item]['Details']["Promotion"] = promotion
-		else:
-			price = PRICES[item] * count
-			cart_with_prices[item]['Details']["Promotion"] = ""
+		# Cart entry details
+		cart_entry = {
+			"Count": count,
+			"Price": 0
+		}
 
-		cart_with_prices[item]['Details']["Price"] = price
-		cart_with_prices[item]['Details']["Count"] = count
+		if item in promotions:
+			required_count = promotions[item]['Count']
+			# Check if the cart carries the correct amount of items for the promotion
+			if count >= required_count:
+
+				# Check how many promotions the cart is eligible for
+				promotions_applicable = count // required_count
+
+				# Any remainder items are normal price
+				individual_items = count % required_count
+
+				# Add the prices up for the item
+				cart_entry["Price"] += individual_items * prices[item]
+				cart_entry["Price"] += promotions_applicable * promotions[item]["Price"]
+
+				# Mark the entry with what promotion was used and how many times
+				cart_entry["Promotion"] = promotions[item]["Promotion"]
+				cart_entry["Promotions_Applied"] = promotions_applicable
+			else:
+				# If there is a promotion but they did not take enough items, regular price.
+				cart_entry["Price"] += count * prices[item]
+				cart_entry["Promotions_Applied"] = 0
+		else:
+			# If not promotion available for that item, regular price is used
+			cart_entry["Price"] += count * prices[item]
+			cart_entry["Promotions_Applied"] = 0
+		
+		# Add the item to the final cart
+		cart_with_prices[item] = cart_entry
 	return cart_with_prices
 
-def calculate_promotion_price(item, count):
-	return PRICES[item], "BOGO"
-
-def calculate_total_price(final_prices):
+def calculate_total(cart):
+	# Calculate the cart total without tax
 	total = 0
-	for item, details in final_prices.items():
-		if item not in PRICES:
-			print("ERROR: NO PRICE FOUND FOR: ", item, "PLEASE TALK TO CASHIER")
-			return("ERROR: NO PRICE FOUND")
-		print("%d * %s: %s   %s" % (details['Details']['Count'], item, format_currency(details['Details']['Price']), details['Details']['Promotion']))
-		total += final_prices[item]['Details']['Price']
+	for item, details in cart.items():
+		total += details["Price"]
 	return total
 
+def get_tax_amount(total):
+	# Calculate tax based on cart total
+	return total * (TAX_PERCENTAGE / 100)
 
 if __name__ == "__main__":
+	cart = get_grocery_list()
+
+	promotions = get_promotions()
 	
-	cart_count = count_items_in_cart(USER_CART)
+	prices = get_prices()
+	
+	if not cart_items_valid(cart, prices):
+		print("Invalid Cart Item")
+		exit()
 
-	cart_prices = calculate_prices(cart_count)
+	cart_count = count_items_in_cart(cart)
 
-	total = calculate_total_price(cart_prices)
-	print("#### TOTAL ####")
-	print("$%s" % total)
+	cart_prices = calculate_prices(cart_count, promotions, prices)
+
+	total_price = calculate_total(cart_prices)
+	
+	tax = get_tax_amount(total_price)
+
+	final_price = total_price + tax
+	print("\n{0:<5} {1:<13} {2:<10} {3:<10}".format("COUNT", "ITEM", "PRICE", "PROMOTIONS"))
+
+	# Print the receipt for the cart
+	for item, details in cart_prices.items():
+		count = details["Count"]
+		price = format_currency_CAD(details["Price"])
+		promotions_applied = details["Promotions_Applied"]
+		
+		if promotions_applied:
+			promotion = details["Promotion"]
+			# print("%d * $%s: %s \n    Promotions: %d * %s" % (count, item, price, promotions_applied, promotion) )
+
+			print("{0:<5} {1:<13} ${2:<10}{3:<1} * {4:<10}".format(count, item, price, promotions_applied, promotion))
+		else:
+			# print("%d * %s: %s" % (count, item, price) )
+			print("{0:<5} {1:<13} ${2:<10}".format(count, item, price))
+
+	print("\nCart Total: $%s" % (format_currency_CAD(total_price)))
+	print("Tax: $%s" % (format_currency_CAD(tax)))
+	print("\n#### TOTAL ####")
+	print("$%s\n" % format_currency_CAD(final_price))
