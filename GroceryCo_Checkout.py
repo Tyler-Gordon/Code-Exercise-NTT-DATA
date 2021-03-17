@@ -6,20 +6,20 @@ GROCERY_LIST_FILENAME = 'Grocery_List.txt'
 PROMOTION_LIST_FILENAME = 'Promotion_List.json'
 TAX_PERCENTAGE = 12
 
-def get_grocery_list():
+def get_grocery_list(path):
 	# Get the user's grocery list
-	with open(GROCERY_LIST_FILENAME, "r") as file:
+	with open(path, "r") as file:
 		return file.read().splitlines()
 
-def get_promotions():
+def get_promotions(path):
 	# Get all the promotions available
-	with open(PROMOTION_LIST_FILENAME, "r") as file:
+	with open(path, "r") as file:
 		data = json.load(file)
 		return data
 
-def get_prices():
+def get_prices(path):
 	# Get all the prices available
-	with open(PRICE_LIST_FILENAME, "r") as file:
+	with open(path, "r") as file:
 		data = json.load(file)
 		return data
 
@@ -94,14 +94,14 @@ def get_tax_amount(total):
 	return total * (TAX_PERCENTAGE / 100)
 
 if __name__ == "__main__":
-	cart = get_grocery_list()
+	cart = get_grocery_list(GROCERY_LIST_FILENAME)
 
-	promotions = get_promotions()
+	promotions = get_promotions(PROMOTION_LIST_FILENAME)
 	
-	prices = get_prices()
+	prices = get_prices(PRICE_LIST_FILENAME)
 	
 	if not cart_items_valid(cart, prices):
-		print("Invalid Cart Item")
+		print("Invalid Cart Item. Please see a Cashier for assistance.")
 		exit()
 
 	cart_count = count_items_in_cart(cart)

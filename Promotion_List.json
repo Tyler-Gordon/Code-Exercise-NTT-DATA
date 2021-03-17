@@ -18,10 +18,5 @@
         "Promotion": "SALE",
         "Count": 1,
         "Price": 0.50
-    },
-    "Meat": {
-        "Promotion": "BOGO_FREE",
-        "Count": 2,
-        "Price": 120.00
     }
 }
