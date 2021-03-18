@@ -4,7 +4,7 @@ Code Exercise for NTT Data Recruitment
 
 ## GroceryCo Checkout System
 Requirements:
-- installed and runnable from command line (see https://www.python.org/downloads/ for instructions on installing Python 3)
+- Python 3: installed and runnable from command line (see https://www.python.org/downloads/ for instructions on installing Python 3)
 ### How to run
 1. Clone or download this repository
 2. Use your terminal to navigate to the directory where it has downloaded
@@ -54,10 +54,9 @@ For example:
 
 ## Testing
 ### How to run the tests:
-1. Clone or download this repository
-2. Use your terminal to navigate to the directory where it has downloaded
-3. Use the command: `python test_groceryco_checkout.py` to run the checkout system
-4. The output shows how many test cases passed and failed.
+1. Use your terminal to navigate to the directory where it has downloaded
+2. Use the command: `python test_groceryco_checkout.py` to run the checkout system
+3. The output shows how many test cases passed and failed.
 
 ### Modifying tests cases and values
 The tests are located in the `test_groceryco_checkout.py` file, and the associated input files (grocery list, prices, and promotions) are located under the `testing/` folder. These are used by the test cases as mock data. Modifying the mock data will likely cause tests to fail because of hardcoded expected results.
