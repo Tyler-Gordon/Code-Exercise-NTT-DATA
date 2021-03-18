@@ -6,22 +6,19 @@ GROCERY_LIST_FILENAME = 'Grocery_List.txt'
 PROMOTION_LIST_FILENAME = 'Promotion_List.json'
 TAX_PERCENTAGE = 12
 
-def get_grocery_list(path):
-	# Get the user's grocery list
-	with open(path, "r") as file:
-		return file.read().splitlines()
-
-def get_promotions(path):
-	# Get all the promotions available
-	with open(path, "r") as file:
-		data = json.load(file)
-		return data
-
-def get_prices(path):
-	# Get all the prices available
-	with open(path, "r") as file:
-		data = json.load(file)
-		return data
+def get_data_from_file(filename):
+	try:
+		if ".json" in filename.lower():
+			with open(filename, "r") as file:
+				data = json.load(file)
+				return data
+		else:
+			with open(filename, "r") as file:
+				return file.read().splitlines()
+	except FileNotFoundError as error:
+		print("File: {0} not found in directory".format(filename))
+		# Exit because program cannot continue without all files.
+		exit()
 
 def cart_items_valid(cart, prices):
 	# Check if the cart is a subset of all available priced items
@@ -29,6 +26,11 @@ def cart_items_valid(cart, prices):
 
 def format_currency_CAD(price):
 	# Format the price to Canadian dollar formatting
+	if type(price) != int or type(price) != float:
+		try:
+			price = float(price)
+		except:
+			print("Price not valid for currency formatting.")
 	return "{:,.2f}".format(price)
 
 def count_items_in_cart(cart):
@@ -94,11 +96,10 @@ def get_tax_amount(total):
 	return total * (TAX_PERCENTAGE / 100)
 
 if __name__ == "__main__":
-	cart = get_grocery_list(GROCERY_LIST_FILENAME)
+	cart = get_data_from_file(GROCERY_LIST_FILENAME)
 
-	promotions = get_promotions(PROMOTION_LIST_FILENAME)
-	
-	prices = get_prices(PRICE_LIST_FILENAME)
+	promotions = get_data_from_file(PROMOTION_LIST_FILENAME)
+	prices = get_data_from_file(PRICE_LIST_FILENAME)
 	
 	if not cart_items_valid(cart, prices):
 		print("Invalid Cart Item. Please see a Cashier for assistance.")
