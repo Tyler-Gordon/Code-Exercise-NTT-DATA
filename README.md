@@ -54,7 +54,7 @@ For example:
 
 ## Testing
 ### How to run the tests:
-1. Use your terminal to navigate to the directory where it has downloaded
+1. Use your terminal to navigate to the directory where the repository is
 2. Use the command: `python test_groceryco_checkout.py` to run the checkout system
 3. The output shows how many test cases passed and failed.
 
